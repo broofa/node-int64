@@ -64,9 +64,9 @@ Int64.prototype = {
 
   /**
   * Set the value:
-  * new Int64(string) - A hexidecimal string
-  * new Int64(number) - Number (throws if n is outside int64 range)
-  * new Int64(hi, lo) - Raw bits as two 32-bit values
+  * setValue(string) - A hexidecimal string
+  * setValue(number) - Number (throws if n is outside int64 range)
+  * setValue(hi, lo) - Raw bits as two 32-bit values
   */
   setValue: function(hi, lo) {
     var negate = false;
@@ -111,7 +111,7 @@ Int64.prototype = {
   * to integer precision.
   */
   error: function() {
-    return Math.ceil(Math.abs(x) / Int64.MAX_INT) - 1;
+    return Math.ceil(Math.abs(this.valueOf()) / Int64.MAX_INT) - 1;
   },
 
   /**
@@ -152,30 +152,3 @@ Int64.prototype = {
     return s.join('');
   }
 };
-
-//
-// Tests
-//
-
-var args = [
-  [0],
-  [1],
-  [-1],
-  [1e18],
-  ['0ff1234500654321'],
-  [0xff12345, 0x654321],
-  ['0x0001234500654321'],
-  ['0xFFFFFFFFFFFFFFFF']
-];
-
-for (var i = 0; i < args.length; i++) {
-  var a = args[i];
-  // Create instance
-  var x = new Int64();
-  Int64.apply(x, a);
-
-  console.log('  args: ' + a);
-  console.log('value: ' + x + ', string: ' + x.toString() + ', err: ' + x.accuracy());
-
-  console.log('-----------');
-}

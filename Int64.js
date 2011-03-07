@@ -1,13 +1,18 @@
 /**
 * Support for handling 64-bit int numbers in Javascript (node.js)
 *
-* JS Numbers are IEEE-754 double-precision floats, which limits the range of
-* integer values that can be accurately represented to +/- 2^^53.
+* JS Numbers are IEEE-754 binary double-precision floats, which limits the
+* range of values that can be represented with integer precision to:
+*
+* 2^^53 <= N <= 2^53
 *
 * Int64 objects wrap a node Buffer that holds the 8-bytes of int64 data.  These
-* objects operate directly on the buffer, which means that if they are created
-* using an existing buffer, setting the value will modify the Buffer and
+* objects operate directly on the buffer which means that if they are created
+* using an existing buffer then setting the value will modify the Buffer, and
 * vice-versa.
+*
+* For details about IEEE-754 see:
+* http://en.wikipedia.org/wiki/Double_precision_floating-point_format
 */
 
 // Useful masks and values for doing bit twiddling
@@ -15,8 +20,10 @@ var MASK31 =  0x7fffffff, VAL31 = 0x80000000;
 var MASK32 =  0xffffffff, VAL32 = 0x100000000;
 
 // Map for converting hex octets to strings
-var _HEX = [];
-for (var i = 0; i < 256; i++) _HEX[i] = (i > 0xF ? '' : '0') + i.toString(16);
+var _HEX = [], _PADHEX = [];
+for (var i = 0; i < 256; i++) {
+  _HEX[i] = (i > 0xF ? '' : '0') + i.toString(16);
+}
 
 //
 // Int64
@@ -91,11 +98,11 @@ Int64.prototype = {
       }
     }
 
-    // TODO: Do we want to throw if hi/lo is outside int32 range here?
+    // Technically we should throw if hi/lo is outside int32 range here, but
+    // it's not worth the effort.
 
     // Copy bytes to buffer
-    b = this.buffer;
-    var o = this.offset;
+    var b = this.buffer, o = this.offset;
     for (var i = 7; i >= 0; i--) {
       b[o+i] = lo & 0xff;
       lo = i == 4 ? hi : lo >>> 8;
@@ -106,49 +113,55 @@ Int64.prototype = {
   },
 
   /**
-  * Return the approximate error involved in converting the current value to a
-  * native JS number.  If > 0, the value is outside the range JS can represent
-  * to integer precision.
-  */
-  error: function() {
-    return Math.ceil(Math.abs(this.valueOf()) / Int64.MAX_INT) - 1;
-  },
-
-  /**
-  * Convert to a JS Number.
-  *
-  * Be aware that if the returned value is outside the range ...
-  *
-  *     Int64.MIN_INT <= x <= Int64.MAX_INT
-  *
-  * ... it is unlikely to exactly represent the underlying 64-bit value.
+  * Convert to a JS Number. Returns +/-Infinity for values that can't be
+  * represented to integer precision.
   */
   valueOf: function() {
     var b = this.buffer, o = this.offset;
-    var negate = b[0] & 0x80, x = 0, xx = 1;
-    if (negate) this._2scomp();
-    for (var i = o + 7; i >= o; i--) {
-      var v = b[i] & (i == 0 ? 0x7f : 0xff);
-      x += v*xx;
-      xx *= 0x100;
+
+    var negate = b[0] & 0x80, x = 0, carry = 1;
+    for (var i = 0, ii = o + 7; i < 8; i++, ii--) {
+      var v = b[ii];
+      // Do a running 2's complement for negative numbers
+      if (negate) {
+        v = (v ^ 0xff) + carry;
+        carry = v >> 8;
+      }
+
+      x += (v & 0xff) * Math.pow(256, i);
     }
-    if (negate) {
-      x = -x;
-      this._2scomp();
+
+    // Return Infinity if we've lost integer precision
+    if (x >= Int64.MAX_INT) {
+      return negate ? -Infinity : Infinity;
     }
-    return x;
+
+    return negate ? -x : x;
   },
 
   /**
-  * Get value as a string of hex octets
-  *
-  * @param sep (String) string to join() with. Default=''
+  * Return string value
   */
-  toString: function(sep) {
-    var b = this.buffer, o = this.offset, s = ['0x'];
+  toString: function(radix) {
+    return this.valueOf().toString(radix || 10);
+  },
+
+  /**
+  * Return a string showing the buffer octets, with MSB on the left.
+  */
+  toOctetString: function(sep) {
+    var out = new Array(8);
+    var b = this.buffer, o = this.offset;
     for (var i = 0; i < 8; i++) {
-      s.push(_HEX[this.buffer[o+i]]);
+      out[i] = _HEX[b[o+i]];
     }
-    return s.join('');
+    return out.join(sep || '');
+  },
+
+  /**
+  * Pretty output in console.log
+  */
+  inspect: function() {
+    return '[Int64 value:' + this + ' octets:' + this.toOctetString(' ') + ']';
   }
 };

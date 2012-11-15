@@ -1,3 +1,8 @@
+//     Int64.js
+//
+//     Copyright (c) 2012 Robert Kieffer
+//     MIT License - http://opensource.org/licenses/mit-license.php
+
 /**
  * Support for handling 64-bit int numbers in Javascript (node.js)
  *

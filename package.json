@@ -5,7 +5,7 @@
   "keywords"      : ["math", "integer", "int64"],
   "author"        : "Robert Kieffer <robert@broofa.com>",
   "contributors"  : [],
-  "dependencies"  : [],
+  "dependencies"  : {},
   "lib"           : ".",
   "main"          : "./Int64.js",
   "version"       : "0.3.0"

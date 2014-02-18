@@ -140,7 +140,7 @@ Int64.prototype = {
     var b = this.buffer, o = this.offset;
 
     // Running sum of octets, doing a 2's complement
-    var negate = b[0] & 0x80, x = 0, carry = 1;
+    var negate = b[o] & 0x80, x = 0, carry = 1;
     for (var i = 7, m = 1; i >= 0; i--, m *= 256) {
       var v = b[o+i];
 

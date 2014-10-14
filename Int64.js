@@ -194,7 +194,7 @@ Int64.prototype = {
   },
 
   /**
-   * Returns the int64's 8 bits in a buffer.
+   * Returns the int64's 8 bytes in a buffer.
    *
    * @param {bool} [rawBuffer=false]  If no offset and this is true, return the internal buffer.  Should only be used if
    *                                  you're discarding the Int64 afterwards, as it breaks encapsulation.

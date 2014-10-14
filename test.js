@@ -44,7 +44,8 @@ assert.equal(targetBuffer.toString('hex'), expectedBuffer.toString('hex'));
 // Test construction from existing buffer with offset, and buffer outputs on same.
 
 var sourceBuffer = new Buffer(16);
-sourceBuffer.writeUInt32BE(0xfffaffff, 2); sourceBuffer.writeUInt32BE(0xfffff700, 6);
+sourceBuffer.writeUInt32BE(0xfffaffff, 2);
+sourceBuffer.writeUInt32BE(0xfffff700, 6);
 intUnderTest = new Int64(sourceBuffer, 2);
 assert.equal(intUnderTest.toBuffer().toString('hex'), expectedBuffer.toString('hex'));
 

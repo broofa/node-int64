@@ -194,6 +194,30 @@ Int64.prototype = {
   },
 
   /**
+   * Returns the int64's 8 bits in a buffer.
+   *
+   * @param {bool} [rawBuffer=false]  If no offset and this is true, return the internal buffer.  Should only be used if
+   *                                  you're discarding the Int64 afterwards, as it breaks encapsulation.
+   */
+  toBuffer: function(rawBuffer) {
+    if (rawBuffer && this.offset === 0) return this.buffer;
+
+    var out = new Buffer(8);
+    this.buffer.copy(out, 0, this.offset, this.offset + 8);
+    return out;
+  },
+
+  /**
+   * Copy 8 bytes of int64 into target buffer at target offset.
+   *
+   * @param {Buffer} targetBuffer       Buffer to copy into.
+   * @param {number} [targetOffset=0]   Offset into target buffer.
+   */
+  copy: function(targetBuffer, targetOffset) {
+    this.buffer.copy(targetBuffer, targetOffset || 0, this.offset, this.offset + 8);
+  },
+
+  /**
    * Pretty output in console.log
    */
   inspect: function() {

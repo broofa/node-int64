@@ -55,10 +55,10 @@ var Int64 = module.exports = function(a1, a2) {
     this.buffer = a1;
     this.offset = a2 || 0;
   } else if (Object.prototype.toString.call(a1) == '[object Uint8Array]') {
-    // Under Browserify, Buffers are can be extended Uint8Arrays. Technically,
-    // it shouldn't be necessary to construct a new buffer. In order to handle
-    // the case where a raw Uint8Array is passed in, however, we construct a
-    // new one just in caes.
+    // Under Browserify, Buffers can extend Uint8Arrays rather than an
+    // instance of Buffer. We could assume the passed in Uint8Array is actually
+    // a buffer but that won't handle the case where a raw Uint8Array is passed
+    // in. We construct a new Buffer just in case.
     this.buffer = new Buffer(a1);
     this.offset = a2 || 0;
   } else {

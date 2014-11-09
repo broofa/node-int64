@@ -45,6 +45,7 @@ for (var i = 0; i < 256; i++) {
  * Constructor accepts any of the following argument types:
  *
  * new Int64(buffer[, offset=0]) - Existing Buffer with byte offset
+ * new Int64(Uint8Array[, offset=0]) - Existing Uint8Array with a byte offset
  * new Int64(string)             - Hex string (throws if n is outside int64 range)
  * new Int64(number)             - Number (throws if n is outside int64 range)
  * new Int64(hi, lo)             - Raw bits as two 32-bit values
@@ -52,6 +53,13 @@ for (var i = 0; i < 256; i++) {
 var Int64 = module.exports = function(a1, a2) {
   if (a1 instanceof Buffer) {
     this.buffer = a1;
+    this.offset = a2 || 0;
+  } else if (Object.prototype.toString.call(a1) == '[object Uint8Array]') {
+    // Under Browserify, Buffers are can be extended Uint8Arrays. Technically,
+    // it shouldn't be necessary to construct a new buffer. In order to handle
+    // the case where a raw Uint8Array is passed in, however, we construct a
+    // new one just in caes.
+    this.buffer = new Buffer(a1);
     this.offset = a2 || 0;
   } else {
     this.buffer = this.buffer || new Buffer(8);

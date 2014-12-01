@@ -54,3 +54,5 @@ intUnderTest.copy(targetBuffer, 4);
 assert.equal(targetBuffer.slice(4, 12).toString('hex'), expectedBuffer.toString('hex'));
 
 console.log(new Int64(new Buffer([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0])).toBuffer());
+
+console.log(new Int64(new Uint8Array([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0])).toBuffer());

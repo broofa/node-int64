@@ -29,3 +29,30 @@ for (var i = 0; i < args.length; i += 3) {
 
   assert.equal(x.toNumber(true), number);
 }
+
+// Test buffer output
+
+var intUnderTest = new Int64(0xfffaffff, 0xfffff700);
+var expectedBuffer = new Buffer([0xff, 0xfa, 0xff, 0xff, 0xff, 0xff, 0xf7, 0x00]);
+console.log('Testing '+intUnderTest.toOctetString()+' as Buffer');
+assert.equal(intUnderTest.toBuffer().toString('hex'), expectedBuffer.toString('hex'));
+
+var targetBuffer = new Buffer(8);
+intUnderTest.copy(targetBuffer);
+assert.equal(targetBuffer.toString('hex'), expectedBuffer.toString('hex'));
+
+// Test construction from existing buffer with offset, and buffer outputs on same.
+
+var sourceBuffer = new Buffer(16);
+sourceBuffer.writeUInt32BE(0xfffaffff, 2);
+sourceBuffer.writeUInt32BE(0xfffff700, 6);
+intUnderTest = new Int64(sourceBuffer, 2);
+assert.equal(intUnderTest.toBuffer().toString('hex'), expectedBuffer.toString('hex'));
+
+targetBuffer = new Buffer(16);
+intUnderTest.copy(targetBuffer, 4);
+assert.equal(targetBuffer.slice(4, 12).toString('hex'), expectedBuffer.toString('hex'));
+
+console.log(new Int64(new Buffer([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0])).toBuffer());
+
+console.log(new Int64(new Uint8Array([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0])).toBuffer());

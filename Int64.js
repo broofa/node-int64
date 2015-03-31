@@ -76,6 +76,9 @@ Int64.MAX_INT = Math.pow(2, 53);
 Int64.MIN_INT = -Math.pow(2, 53);
 
 Int64.prototype = {
+
+  constructor: Int64,
+
   /**
    * Do in-place 2's compliment.  See
    * http://en.wikipedia.org/wiki/Two's_complement

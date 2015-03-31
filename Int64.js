@@ -229,6 +229,21 @@ Int64.prototype = {
   },
 
   /**
+   * Returns a number indicating whether this comes before or after or is the
+   * same as the other in sort order.
+   *
+   * @param {Int64} other  Other Int64 to compare.
+   */
+  compare: function(other) {
+    for (var i = 0; i < 8; i++) {
+      if (this.buffer[this.offset+i] !== other.buffer[other.offset+i]) {
+        return this.buffer[this.offset+i] - other.buffer[other.offset+i];
+      }
+    }
+    return 0;
+  },
+
+  /**
    * Pretty output in console.log
    */
   inspect: function() {

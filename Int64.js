@@ -235,12 +235,28 @@ Int64.prototype = {
    * @param {Int64} other  Other Int64 to compare.
    */
   compare: function(other) {
+
+    // If sign bits differ ...
+    if ((this.buffer[this.offset] & 0x80) != (other.buffer[other.offset] & 0x80)) {
+      return other.buffer[other.offset] - this.buffer[this.offset];
+    }
+
+    // otherwise, compare bytes lexicographically
     for (var i = 0; i < 8; i++) {
       if (this.buffer[this.offset+i] !== other.buffer[other.offset+i]) {
         return this.buffer[this.offset+i] - other.buffer[other.offset+i];
       }
     }
     return 0;
+  },
+
+  /**
+   * Returns a boolean indicating if this integer is equal to other.
+   *
+   * @param {Int64} other  Other Int64 to compare.
+   */
+  equals: function(other) {
+    return this.compare(other) === 0;
   },
 
   /**

@@ -1,6 +1,6 @@
 # Not Actively Maintained
 
-This module was a workaround JS' lack of support for Int64 data types.  However, (BigInt)[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt]s are now a thing.  If you're writing new code, use those.
+This module was a workaround JS' lack of support for Int64 data types.  However, [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)s are now a thing.  If you're writing new code, use those.
 
 This module will be deprecated at some future date and is not actively maintained.
 

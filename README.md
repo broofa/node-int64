@@ -1,8 +1,8 @@
-# ![image](https://user-images.githubusercontent.com/164050/52737878-42886600-2f82-11e9-81de-c750db7b4ac3.png) This module is not actively maintained
+# ![image](https://user-images.githubusercontent.com/164050/52737878-42886600-2f82-11e9-81de-c750db7b4ac3.png) This package is not actively maintained
 
-`int64` was a workaround JS' lack of support for Int64 data types.  Somewhat to my surprise, people have found it useful.  However, [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)s are now a thing so, really, there's not much point in maintaining this.  If you're writing new code, please use `BigInt`s.
+`int64` was a workaround JS' lack of support for Int64 data types.  Somewhat to my surprise, people have found it useful.  However, [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)s are becoming a thing.  If you're writing new code, please use `BigInt`s.
 
-If/when a trustworthy organization or individual would like to take ownership, I'm happy to hand this off.  Otherwise I'll be npm-deprecating this at a future date.
+That said, if a trustworthy organization or individual would like to take over, I'm happy to hand this off.  Please contact me at [robert@broofa.com](mailto:robert@broofa.com) if you're interested. Otherwise I'll be npm-deprecating this at some future date.
 
 # int64
 
